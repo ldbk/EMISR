@@ -1,0 +1,18 @@
+Package: EMISR
+Title: EMIS and GMIS data extraction and analyses
+Version: 0.1
+Authors@R: "Laurent Dubroca [aut,cre] <laurent.dubroca@gmail.com>"
+Description: A package to extract and to analyse the data of the Environmental
+    Marine Information System (EMIS) and the Global Marine Information System
+    (GMIS). EMIS and GMIS are two activities of the European Commission - DG
+    JRC (Joint Research Centre), developed within the Water Resources Unit of
+    the Institute for Environment and Sustainability (IES).
+Depends:
+    R (>= 3.0.2),
+    XML,
+    RCurl,
+    raster,
+    sp
+License: MIT +
+LazyData: true
+Date: 2014-12-02

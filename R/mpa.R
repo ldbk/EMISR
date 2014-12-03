@@ -1,0 +1,35 @@
+#' Marine protected area database description
+#'
+#' The shapefile of the marine protected area (MPA) was downloaded from
+#' \url{http://www.protectedplanet.net} the 03/12/2014.
+#' The shapefile was converted in SpatialPolygonsDataFrame using rgdal:
+#' \code{mpa<-readOGR("EMISR/data/mpa/","mpa",encoding="Latin1")}
+#' then mpa was splitted in two: mpa1 and mpa2.
+#'
+#' No projection system is available for this SpatialPolygonsDataFrame
+#' due to coordinates problem.
+#' 26 variables are available, describing the mpa characteristics (see reference).
+#'
+#' @format A SpatialPolygonsDataFrame with 4000 features (the first 4000 MPA according to their wdpaid)
+#' @source \url{http://www.protectedplanet.net}
+#' @references UNEP-WCMC (2012). Data Standards for the World Database on Protected Areas. UNEP-WCMC: Cambridge, UK.
+#' @name mpa1
+NULL
+
+#' Marine protected area database description
+#'
+#' The shapefile of the marine protected area (MPA) was downloaded from
+#' \url{http://www.protectedplanet.net} the 03/12/2014.
+#' The shapefile was converted in SpatialPolygonsDataFrame using rgdal:
+#' \code{mpa<-readOGR("EMISR/data/mpa/","mpa",encoding="Latin1")}
+#' then mpa was splitted in two: mpa1 and mpa2.
+#'
+#' No projection system is available for this SpatialPolygonsDataFrame
+#' due to coordinates problem.
+#' 26 variables are available, describing the mpa characteristics (see reference).
+#'
+#' @format A SpatialPolygonsDataFrame with 5612 features (the last 5612 MPA according to their wdpaid)
+#' @source \url{http://www.protectedplanet.net}
+#' @references UNEP-WCMC (2012). Data Standards for the World Database on Protected Areas. UNEP-WCMC: Cambridge, UK.
+#' @name mpa2
+NULL
