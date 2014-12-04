@@ -182,7 +182,7 @@ mpaprocessstat<-function(imgs,mpa,name,unite){
   #############################################
   # compute indicators"
   # check data availability in the polygon and create a dataframe with the corresponding pixel"
-  datinpoly<-extract(imgs,mpa,df=TRUE,cellnumbers=TRUE)
+  datinpoly<-raster::extract(imgs,mpa,df=TRUE,cellnumbers=TRUE)
   tabdat<-as.vector(as.matrix(datinpoly[,3:ncol(datinpoly)]))
   pixelnb<-nrow(datinpoly)
   #compute the time series for the given pixels
