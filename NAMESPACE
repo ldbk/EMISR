@@ -2,4 +2,5 @@
 
 export(getemisdata)
 export(getemisdataseries)
+export(mpaextract)
 export(read_emis_wcst_data)
