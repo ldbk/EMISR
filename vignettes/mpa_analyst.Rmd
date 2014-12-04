@@ -9,6 +9,11 @@ vignette: >
   \usepackage[utf8]{inputenc}
 ---
 
+```{r, echo = FALSE}
+knitr::opts_chunk$set(collapse=TRUE,comment="#>",fig.width=6,fig.height=6)
+library(EMISR)
+```
+
 The vignette illustrates the use of the EMISR package to analyse data for a marine protected area (MPA).
 
 # Choose your mpa
@@ -29,7 +34,6 @@ Then plot it:
  mappoly<-map("worldHires",fill=T,plot=FALSE,xlim=c(extent(mpa)@xmin-1,extent(mpa)@xmax+1),ylim=c(extent(mpa)@ymin-1,extent(mpa)@ymax+1))
  IDs <- sapply(strsplit(mappoly$names, ":"), function(x) x[1])
  coast<- map2SpatialPolygons(mappoly, IDs=IDs, proj4string=CRS("+proj=longlat +datum=WGS84"))
- print(paste("process localisation map"))
  #plot at global scale
  map("worldHires",col="light grey",fill=T)
  points(coordinates(mpa),cex=2,col="blue",pch="+")
@@ -42,50 +46,52 @@ Then plot it:
 
 ```
 
-Vignettes are long form documentation commonly included in packages. Because they are part of the distribution of the package, they need to be as compact as possible. The `html_vignette` output type provides a custom style sheet (and tweaks some options) to ensure that the resulting html is as small as possible. The `html_vignette` format:
+# Environmental parameters extraction and analysis
 
-- Never uses retina figures
-- Has a smaller default figure size
-- Uses a custom CSS stylesheet instead of the default Twitter Bootstrap style
-
-## Vignette Info
-
-Note the various macros within the `vignette` setion of the metadata block above. These are required in order to instruct R how to build the vignette. Note that you should change the `title` field and the `\VignetteIndexEntry` to match the title of your vignette.
-
-## Styles
-
-The `html_vignette` template includes a basic CSS theme. To override this theme you can specify your own CSS in the document metadata as follows:
-
-    output: 
-      rmarkdown::html_vignette:
-        css: mystyles.css
-
-## Figures
-
-The figure sizes have been customised so that you can easily put two images side-by-side. 
-
-```{r, fig.show='hold'}
-plot(1:10)
-plot(10:1)
+The function `mpaextract` download the requested parameter on EMIS (european waters, high spatial resolution) or GMIS
+(global scale, but only available at 4 and 9 km). 
+```{r,eval=FALSE}
+#extraction of the MODIS sea surface temperature at 2 km between 2009 and 2012 on the Pantelleria marine protected area (Italy)
+pantelleria_sst<-mpaextract("EMIS_T_SST","2km","2009-01","2012-12",555540558)
+#extraction of the MODIS sea surface temperature at 2 km between 2009 and 2012 on the Pantelleria marine protected area (Italy)
+pantelleria_chl<-mpaextract("EMIS_A_CHLA","2km","2009-01","2012-12",555540558)
 ```
 
-You can enable figure captions by `fig_caption: yes` in YAML:
+Then the extracted parameters can be processed in two ways:
 
-    output:
-      rmarkdown::html_vignette:
-        fig_caption: yes
+- graphically, some figures are elaborated (plot of the whole series, average, climatology and boxplot of the climatology). The
+  function `mpaprocessplt` does this graphical processing. 
 
-Then you can use the chunk option `fig.cap = "Your figure caption."` in **knitr**.
-
-## More Examples
-
-You can write math expressions, e.g. $Y = X\beta + \epsilon$, footnotes^[A footnote here.], and tables, e.g. using `knitr::kable()`.
-
-```{r, echo=FALSE, results='asis'}
-knitr::kable(head(mtcars, 10))
+```{r,eval=TRUE}
+plt<-mpaprocessplot(imgs=pantelleria_sst,mpa=pantelleria_mpa,name="EMIS_T_SST",unite="oC",logscale=FALSE)
+#map of the whole series
+plt[[1]]+latticeExtra::layer(sp.polygons(coast,fill="grey",col="grey"))+latticeExtra::layer(sp.polygons(pantelleria_mpa))
+#map of the average SST
+plt[[2]]+latticeExtra::layer(sp.polygons(coast,fill="grey",col="grey"))+latticeExtra::layer(sp.polygons(pantelleria_mpa))
+#map of the climatology
+plt[[3]]+latticeExtra::layer(sp.polygons(coast,fill="grey",col="grey"))+latticeExtra::layer(sp.polygons(pantelleria_mpa))
+#boxplot of the climatology
+plt[[4]]
 ```
 
-Also a quote using `>`:
+- summary statistics for the parameter are computed thanks to the `mpaprocessstat` function. See the help of this
+  function for the details of the statistical analysis done. A graphic with the time series decomposition of the
+parameter values averaged on the MPA area is given.
 
-> "He who gives up [code] safety for [code] speed deserves neither."
-([via](https://twitter.com/hadleywickham/status/504368538874703872))
+```{r,eval=TRUE}
+datstat<-mpaprocessstat(imgs=pantelleria_sst,mpa=pantelleria_mpa,name="EMIS_T_SST",unite="oC")
+#the statistics
+datstat[[1]]
+#time series decomposition
+datstat[[2]]
+```
+
+-the function `mpaprocess` calls successively the functions `mpaextract`,`mpaprocessplt` and `mpaprocessstat` and gives
+all the outputs (plot and statistics) in a list.
+```{r,eval=TRUE}
+pltstat<-mpaprocess(name = "EMIS_A_CHLA", resolution = "4km", startdate = "2009-01", enddate = "2012-12", wdpaid = 555540558)
+```
+
+Results can be combine with more than one parameters repeating extraction and analysis changing the name of the
+parameters.
+
