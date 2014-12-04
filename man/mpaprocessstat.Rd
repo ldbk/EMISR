@@ -39,14 +39,12 @@ References:
 Vantrepotte, V. & Melin, F. Temporal variability of 10-year global SeaWiFS time-series of phytoplankton chlorophyll a concentration ICES J. Mar. Sci., 2009, 66, 1547-1556
 }
 \examples{
-\dontrun{
-     #analysis of the MODIS sea surface temperature at 2 km 2009 and 2012 on the Pantelleira mpa (Italy)
+#analysis of the MODIS sea surface temperature at 2 km 2009 and 2012 on the Pantelleira mpa (Italy)
 	stat<-mpaprocessstat(imgs=pantelleria_sst,mpa=pantelleria_mpa,name="EMIS_T_SST",unite="oC")
 	#statistics
 	stat[[1]]
 	#plot of the time series decomposition of the parameter averaged on the MPA surface
 	stat[[2]]
-  }
 }
 \keyword{EMIS}
 \keyword{wcs-t}

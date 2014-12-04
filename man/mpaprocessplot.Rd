@@ -23,8 +23,7 @@ A list of plots
 This function draw figures based on a series of map of a EMIS/GMIS parameter for a marine protected area
 }
 \examples{
-\dontrun{
-     #analysis of the MODIS sea surface temperature at 2 km 2009 and 2012 on the Pantelleira mpa (Italy)
+#analysis of the MODIS sea surface temperature at 2 km 2009 and 2012 on the Pantelleira mpa (Italy)
 	plt<-mpaprocessplot(imgs=pantelleria_sst,mpa=pantelleria_mpa,name="EMIS_T_SST",unite="oC",logscale=FALSE)
 	#map of the whole series
 	plt[[1]]
@@ -34,7 +33,6 @@ This function draw figures based on a series of map of a EMIS/GMIS parameter for
 	plt[[3]]
 	#boxplot of the climatology
 	plt[[4]]
-  }
 }
 \keyword{EMIS}
 \keyword{wcs-t}

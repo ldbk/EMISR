@@ -94,7 +94,6 @@ mpaprocess<-function(name="EMIS_A_CHLA",resolution="4km",startdate="2005-09",end
 #' @keywords EMIS
 #' @keywords wcs-t
 #' @examples
-#'   \dontrun{
 #'      #analysis of the MODIS sea surface temperature at 2 km 2009 and 2012 on the Pantelleira mpa (Italy)
 #'	plt<-mpaprocessplot(imgs=pantelleria_sst,mpa=pantelleria_mpa,name="EMIS_T_SST",unite="oC",logscale=FALSE)
 #'	#map of the whole series
@@ -105,7 +104,6 @@ mpaprocess<-function(name="EMIS_A_CHLA",resolution="4km",startdate="2005-09",end
 #'	plt[[3]]
 #'	#boxplot of the climatology
 #'	plt[[4]]
-#'   } 
 #'
 mpaprocessplot<-function(imgs,mpa,name,unite,logscale){
  if(dim(imgs)[3]<12){
@@ -113,27 +111,28 @@ mpaprocessplot<-function(imgs,mpa,name,unite,logscale){
  }else{
  	#precomputation
 	 #average
-	 imgsmean<-mean(imgs,na.rm=T)
+	 imgsmean<-raster::mean(imgs,na.rm=T)
 	 # monthly climatology
 	 imgsclim<-stackApply(imgs,indices=as.numeric(substr(names(imgs),7,8)),fun=mean,na.rm=TRUE)
 	 names(imgsclim)<-paste("Mean",unique(as.numeric(substr(names(imgs),7,8))))
  	#plot
+
 	 titre<-paste(name," (",unite,")",sep="")
-	 pltall<-levelplot(imgs,zscaleLog=logscale,contour=T,col.regions=topo.colors(100),names=substr(names(imgs),2,8),main=titre)
+	 pltall<-rasterVis::levelplot(imgs,zscaleLog=logscale,contour=T,col.regions=topo.colors(100),names=substr(names(imgs),2,8),main=titre)
 	 titre<-paste(name," (",unite,") ",substr(names(imgs)[1],2,8),"-",substr(names(imgs)[dim(imgs)[3]],2,8)," average",sep="")
-	 pltmean<-levelplot(imgsmean,margin=F,zscaleLog=logscale,contour=T,col.regions=topo.colors(100),main=titre)
+	 pltmean<-rasterVis::levelplot(imgsmean,margin=F,zscaleLog=logscale,contour=T,col.regions=topo.colors(100),main=titre)
 	 titre<-paste(name," (",unite,") monthly climatology",sep="")
-	 pltclim<-levelplot(imgsclim,zscaleLog=logscale,col.regions=topo.colors(100),main=titre,names=names(imgsclim))
+	 pltclim<-rasterVis::levelplot(imgsclim,zscaleLog=logscale,contour=T,col.regions=topo.colors(100),main=titre,names=names(imgsclim))
 	 titre<-paste(name," (",unite,") monthly boxplot",sep="")
-	 pltbw<-bwplot(crop(imgsclim,extent(mpa)),scales=list(x=list(labels=names(imgsclim))),main=titre)
+	 pltbw<-rasterVis::bwplot(crop(imgsclim,extent(mpa)),scales=list(x=list(labels=names(imgsclim))),main=titre)
  	#build terretrial polygon
-	 mappoly<-map("worldHires",fill=T,plot=FALSE,xlim=c(extent(mpa)@xmin-1,extent(mpa)@xmax+1),ylim=c(extent(mpa)@ymin-1,extent(mpa)@ymax+1))
-	 IDs <- sapply(strsplit(mappoly$names, ":"), function(x) x[1])
-	 coast<- map2SpatialPolygons(mappoly, IDs=IDs, proj4string=CRS("+proj=longlat +datum=WGS84"))
+	 #mappoly<-map("worldHires",fill=T,plot=FALSE,xlim=c(extent(mpa)@xmin-1,extent(mpa)@xmax+1),ylim=c(extent(mpa)@ymin-1,extent(mpa)@ymax+1))
+	 #IDs <- sapply(strsplit(mappoly$names, ":"), function(x) x[1])
+	 #coast<- map2SpatialPolygons(mappoly, IDs=IDs, proj4string=CRS("+proj=longlat +datum=WGS84"))
  	 #add the coast and the mpa to the maps
- 	 pltall<-pltall+layer(sp.polygons(coast,fill="grey",col="grey"))+layer(sp.polygons(mpa))
- 	 pltmean<-pltmean+layer(sp.polygons(coast,fill="grey",col="grey"))+layer(sp.polygons(mpa))
- 	 pltclim<-pltclim+layer(sp.polygons(coast,fill="grey",col="grey"))+layer(sp.polygons(mpa))
+ 	 #pltall<-pltall+latticeExtra::layer(sp.polygons(coast,fill="grey",col="grey"))+latticeExtra::layer(sp.polygons(mpa))
+ 	 #pltmean<-pltmean+latticeExtra::layer(sp::sp.polygons(coast,fill="grey",col="grey"))+latticeExtra::layer(sp::sp.polygons(mpa))
+ 	 #pltclim<-pltclim+layer(sp.polygons(coast,fill="grey",col="grey"))+layer(sp.polygons(mpa))
          #return the plot in a list
          return(list(pltall=pltall,pltmean=pltmean,pltclim=pltclim,pltbw=pltbw))
  }
@@ -172,14 +171,12 @@ mpaprocessplot<-function(imgs,mpa,name,unite,logscale){
 #' @keywords EMIS
 #' @keywords wcs-t
 #' @examples
-#'   \dontrun{
 #'      #analysis of the MODIS sea surface temperature at 2 km 2009 and 2012 on the Pantelleira mpa (Italy)
 #'	stat<-mpaprocessstat(imgs=pantelleria_sst,mpa=pantelleria_mpa,name="EMIS_T_SST",unite="oC")
 #'	#statistics
 #'	stat[[1]]
 #'	#plot of the time series decomposition of the parameter averaged on the MPA surface
 #'	stat[[2]]
-#'   } 
 #'
 mpaprocessstat<-function(imgs,mpa,name,unite){
   #############################################
