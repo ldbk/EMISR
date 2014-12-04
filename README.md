@@ -9,4 +9,4 @@ install.packages("devtools")
 
 library(devtools)
 
-install_github("EMISR")
+install_github("ldbk/EMISR")

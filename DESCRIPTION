@@ -11,6 +11,7 @@ Depends:
     R (>= 3.0.2),
     XML,
     RCurl,
+    rgdal,
     raster,
     rasterVis,
     mapdata,
