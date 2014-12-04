@@ -12,6 +12,10 @@ Depends:
     XML,
     RCurl,
     raster,
+    rasterVis,
+    mapdata,
+    maptools,
+    wq,
     sp
 License: MIT +
 LazyData: true

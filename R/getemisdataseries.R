@@ -147,11 +147,16 @@ getemisdataseries<-function(name="EMIS_A_CHLA",resolution="4km",startdate="2005-
  	 timelist<-expand.grid(1:12,(startyear+1):(endyear-1))
 	 timeindex2<-paste(timelist[,2],sprintf("%02d",timelist[,1]),sep="-")
  	 timeindex3<-paste(endyear,sprintf("%02d",1:endmonth),sep="-")
- 	 timeindex<-c(timeindex1,timeindex2,timeindex3)
+  	 if((endyear-startyear)==1){
+ 	 	timeindex<-c(timeindex1,timeindex3)
+         }else{
+ 	 	timeindex<-c(timeindex1,timeindex2,timeindex3)
+         }
         }else{
  	 timeindex<-paste(startyear,sprintf("%02d",startmonth:endmonth),sep="-")
         }
  	# loop on timeindex and create a brick raster object"
+         pb<-txtProgressBar(min=0,max=length(timeindex))
 	 for(i in 1:length(timeindex)){
   		if(i<=1){
    		imgs<-getemisdata(name=name,resolution=resolution,date=timeindex[i],xmin=xmin,xmax=xmax,ymin=ymin,ymax=ymax)
@@ -161,7 +166,9 @@ getemisdataseries<-function(name="EMIS_A_CHLA",resolution="4km",startdate="2005-
    		names(img)<-timeindex[i]
    		imgs<-stack(imgs,img)
   		}	
+         	setTxtProgressBar(pb, i)
  	}
+        close(pb)
   	return(imgs)
  }
 
