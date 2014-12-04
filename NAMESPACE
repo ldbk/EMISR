@@ -3,4 +3,7 @@
 export(getemisdata)
 export(getemisdataseries)
 export(mpaextract)
+export(mpaprocess)
+export(mpaprocessplot)
+export(mpaprocessstat)
 export(read_emis_wcst_data)
