@@ -34,8 +34,20 @@
 #' @keywords wcs-t
 #' @examples
 #'   \dontrun{
-#'      #analysis of the MODIS sea surface temperature at 2 km 2005 and 2006 on the Pantelleira mpa (Italy)
+#'      #analysis of the MODIS sea surface temperature at 2 km 2005 and 2006 on the Pantelleria mpa (Italy)
 #'	pltstat<-mpaprocess("EMIS_T_SST","2km","2005-01","2007-12",555540558)
+#'	#map of the whole series
+#'	pltstat[[1]]$pltall
+#'	#map of the average SST
+#'	pltstat[[1]]$pltmean
+#'	#map of the climatology
+#'	pltstat[[1]]$pltclim
+#'	#some statistics
+#'	pltstat[[2]]$stat
+#'	#time series decomposition of the parameters averaged on the MPA area
+#'	pltstat[[2]]$pltts
+#'	#extraction of the MODIS sea surface temperature at 4 km from GMIS for 2005-2007 in the the Bird Island area marine protected area (South Africa)
+#'	pltstat<-mpaprocess("GMIS_T_SST","4km","2005-01","2007-12",306180)
 #'	#map of the whole series
 #'	pltstat[[1]]$pltall
 #'	#map of the average SST
@@ -65,15 +77,27 @@ mpaprocess<-function(name="EMIS_A_CHLA",resolution="4km",startdate="2005-09",end
  	}
  	#download the parameter from EMIS/GMIS
  	imgs<-mpaextract(name=name,resolution=resolution,startdate=startdate,enddate=enddate,wdpaid=wdpaid) 
- 	#
- 	if(resolution=="4km"){data_emis<-data_emis_4km}
-        if(resolution=="2km"){data_emis<-data_emis_2km}
- 	idvar<-grep(name,data_emis$shortname)
-	if(length(grep("log",data_emis$unit[idvar],ignore.case=TRUE))>0){
-                unite<-substr(data_emis$unit[idvar],7,nchar(data_emis$unit[idvar]))
-        }else{
-		unite<-data_emis$unit[idvar]
-	}
+ 	#grap the unit
+	if(substr(name,1,4)=="EMIS"){
+ 		if(resolution=="4km"){data_emis<-data_emis_4km}
+        	if(resolution=="2km"){data_emis<-data_emis_2km}
+ 		idvar<-grep(name,data_emis$shortname)
+		if(length(grep("log",data_emis$unit[idvar],ignore.case=TRUE))>0){
+                	unite<-substr(data_emis$unit[idvar],7,nchar(data_emis$unit[idvar]))
+        	}else{
+			unite<-data_emis$unit[idvar]
+		}	
+ 	}
+	if(substr(name,1,4)=="GMIS"){
+ 		if(resolution=="4km"){data_gmis<-data_gmis_4km}
+        	if(resolution=="9km"){data_gmis<-data_gmis_9km}
+ 		idvar<-grep(name,data_gmis$shortname)
+		if(length(grep("log",data_gmis$unit[idvar],ignore.case=TRUE))>0){
+                	unite<-substr(data_gmis$unit[idvar],7,nchar(data_gmis$unit[idvar]))
+        	}else{
+			unite<-data_gmis$unit[idvar]
+		}	
+ 	}
   	#plot the data
 	plt<-mpaprocessplot(imgs=imgs,mpa=mpa,name=name,unite=unite,logscale=FALSE)
  	stat<-mpaprocessstat(imgs=imgs,mpa=mpa,name=name,unite=unite)
@@ -92,6 +116,7 @@ mpaprocess<-function(name="EMIS_A_CHLA",resolution="4km",startdate="2005-09",end
 #' @export
 #' @return A list of plots
 #' @keywords EMIS
+#' @keywords GMIS
 #' @keywords wcs-t
 #' @examples
 #'      #analysis of the MODIS sea surface temperature at 2 km 2009 and 2012 on the Pantelleira mpa (Italy)
@@ -169,6 +194,7 @@ mpaprocessplot<-function(imgs,mpa,name,unite,logscale){
 #' @export
 #' @return A list of 2 objects: a dataframe and a plot
 #' @keywords EMIS
+#' @keywords GMIS
 #' @keywords wcs-t
 #' @examples
 #'      #analysis of the MODIS sea surface temperature at 2 km 2009 and 2012 on the Pantelleira mpa (Italy)

@@ -5,13 +5,30 @@
 \format{A data frame with 35 rows and 8 variables}
 \source{
 \url{http://emis.jrc.ec.europa.eu/webservices/4km/wcs-t}
+
+\url{http://gmis.jrc.ec.europa.eu/webservices/4km/wcs-t}
 }
 \description{
 A dataframe containing the description of the data available in EMIS
 at 4 km spatial resolution.
 The variables are as follows:
+
+A dataframe containing the description of the data available in GMIS
+at 4 km spatial resolution.
+The variables are as follows:
 }
 \details{
+\itemize{
+    \item{source:}{The data source}
+    \item{resolution:}{Spatial resolution of the data (pixel size)}
+    \item{name:}{Name of the parameters}
+    \item{shortname:}{Shortname of the parameters used in the wcs-t service}
+    \item{unit:}{unit}
+    \item{bbox:}{Geographical bounding box (xmin,ymin,xmax,ymax)}
+    \item{startdate:}{Starting date of the time series}
+    \item{enddate:}{End date of the time series}
+}
+
 \itemize{
     \item{source:}{The data source}
     \item{resolution:}{Spatial resolution of the data (pixel size)}

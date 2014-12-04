@@ -2,8 +2,11 @@
 
 export(getemisdata)
 export(getemisdataseries)
+export(getgmisdata)
+export(getgmisdataseries)
 export(mpaextract)
 export(mpaprocess)
 export(mpaprocessplot)
 export(mpaprocessstat)
 export(read_emis_wcst_data)
+export(read_gmis_wcst_data)

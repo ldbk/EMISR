@@ -1,8 +1,8 @@
-#' This function downloads a time series of a variable from EMIS for a period of time on a spatial area
+#' This function downloads a time series of a variable from GMIS for a period of time on a spatial area
 #' using the wcs-t service
 #'
 #' @param name A character vector of the shortname of the variable
-#' @param resolution A character vector giving the spatial resolution of the data: "4km" or "2km"
+#' @param resolution A character vector giving the spatial resolution of the data: "4km" or "9km"
 #' @param startdate A character vector of the month who begins the series("YYYY-MM")
 #' @param enddate A character vector of the month who ends the series("YYYY-MM")
 #' @param xmin A numeric vector of the lower longitude of the spatial area
@@ -12,33 +12,33 @@
 #' 
 #' @export
 #' @return A rasterstack object of the variable for the given period
-#' @keywords EMIS
+#' @keywords GMIS
 #' @keywords wcs-t
 #' @examples
 #'   \dontrun{
-#'	#extraction of the MODIS chlorophyll a concentration monthly maps for 2005 and 2006 on the gulf of Syrte (Lybia)
-#' 	img<-getemisdataseries("EMIS_A_CHLA","4km","2005-01","2006-12",15,20.5,30,32.5)
-#'	plot(img)
+#'      #extraction of the MODIS chlorophyll a concentration for 2008 and 2010 in the vicinity of the Bird Island area (South Africa)
+#'      img<-getgmisdataseries("GMIS_A_CHLA","4km","2008-01","2010-12",xmin=26.1,xmax=26.5,ymin=-34,ymax=-33.5)
+#'      plot(img)
 #'   } 
 #'
-getemisdataseries<-function(name="EMIS_A_CHLA",resolution="4km",startdate="2005-09",enddate="2005-10",xmin=15,xmax=20.5,ymin=30,ymax=32.5){
+getgmisdataseries<-function(name="GMIS_A_CHLA",resolution="4km",startdate="2005-09",enddate="2005-10",xmin=15,xmax=20.5,ymin=30,ymax=32.5){
 
  checkparameter<-data.frame(name=FALSE,resolution=FALSE,startdate=FALSE,enddate=FALSE,bbox=FALSE)
   #check the spatial resolution
-  if(resolution%in%c("2km","4km")){
+  if(resolution%in%c("9km","4km")){
 	checkparameter$resolution<-TRUE
-   	if(resolution=="4km"){data_emis<-data_emis_4km}
-   	if(resolution=="2km"){data_emis<-data_emis_2km}
+   	if(resolution=="4km"){data_gmis<-data_gmis_4km}
+   	if(resolution=="9km"){data_gmis<-data_gmis_9km}
    	#check variable name
-   	idvar<-grep(name,data_emis$shortname)
+   	idvar<-grep(name,data_gmis$shortname)
    	if(length(idvar)==0){
     		checkparameter$name<-FALSE
-    		print("Variable name do not exist on EMIS")
+    		print("Variable name do not exist on GMIS")
         }else{
     		checkparameter$name<-TRUE
         }
   }else{
-   	print("Spatial resolution should be 2km or 4km")
+   	print("Spatial resolution should be 9km or 4km")
   }
 
   #check time format for startdate
@@ -95,22 +95,22 @@ getemisdataseries<-function(name="EMIS_A_CHLA",resolution="4km",startdate="2005-
   }
   
   if(apply(checkparameter,1,sum)==5){
-     #check date on EMIS time range
-     mindate<-strptime(paste(data_emis$startdate[idvar],"15",sep="-"),"%Y-%m-%d")
-     maxdate<-strptime(paste(data_emis$enddate[idvar],"15",sep="-"),"%Y-%m-%d")
+     #check date on GMIS time range
+     mindate<-strptime(paste(data_gmis$startdate[idvar],"15",sep="-"),"%Y-%m-%d")
+     maxdate<-strptime(paste(data_gmis$enddate[idvar],"15",sep="-"),"%Y-%m-%d")
      askedstartdate<-strptime(paste(startdate,"15",sep="-"),"%Y-%m-%d")
      if((mindate<=askedstartdate)&(askedstartdate<=maxdate)){
      	checkparameter$startdate<-TRUE
 	}else{
      	checkparameter$startdate<-FALSE
-     	print(paste(name,"is not available on EMIS for the",askedstartdate))
+     	print(paste(name,"is not available on GMIS for the",askedstartdate))
      }
      askedenddate<-strptime(paste(enddate,"15",sep="-"),"%Y-%m-%d")
      if((mindate<=askedenddate)&(askedenddate<=maxdate)){
      	checkparameter$enddate<-TRUE
 	}else{
      	checkparameter$enddate<-FALSE
-     	print(paste(name,"is not available on EMIS for the",askedenddate))
+     	print(paste(name,"is not available on GMIS for the",askedenddate))
      }
      if((askedenddate>=askedstartdate)){
      	checkparameter$enddate<-TRUE
@@ -119,20 +119,20 @@ getemisdataseries<-function(name="EMIS_A_CHLA",resolution="4km",startdate="2005-
      	print(paste(startdate,"is older than", enddate))
      }
      #check the bounding box
-     bboxemis<-unlist(strsplit(data_emis$bbox[idvar]," "))
-     xminemis<-as.numeric(bboxemis[1])
-     xmaxemis<-as.numeric(bboxemis[3])
-     yminemis<-as.numeric(bboxemis[2])
-     ymaxemis<-as.numeric(bboxemis[4])
-     n1<-xminemis<=xmin
-     n2<-xmax<=xmaxemis
-     n3<-yminemis<=ymin
-     n4<-ymax<=ymaxemis
+     bboxgmis<-unlist(strsplit(data_gmis$bbox[idvar]," "))
+     xmingmis<-as.numeric(bboxgmis[1])
+     xmaxgmis<-as.numeric(bboxgmis[3])
+     ymingmis<-as.numeric(bboxgmis[2])
+     ymaxgmis<-as.numeric(bboxgmis[4])
+     n1<-xmingmis<=xmin
+     n2<-xmax<=xmaxgmis
+     n3<-ymingmis<=ymin
+     n4<-ymax<=ymaxgmis
      if(n1&n2&n3&n4){
      	checkparameter$bbox<-TRUE
      }else{
      	checkparameter$bbox<-FALSE
-     	print(paste("The selected area is not strickly inside the spatial extent of", name,"in emis"))
+     	print(paste("The selected area is not strickly inside the spatial extent of", name,"in gmis"))
      }
   }
 
@@ -159,10 +159,10 @@ getemisdataseries<-function(name="EMIS_A_CHLA",resolution="4km",startdate="2005-
          pb<-txtProgressBar(min=0,max=length(timeindex))
 	 for(i in 1:length(timeindex)){
   		if(i<=1){
-   		imgs<-getemisdata(name=name,resolution=resolution,date=timeindex[i],xmin=xmin,xmax=xmax,ymin=ymin,ymax=ymax)
+   		imgs<-getgmisdata(name=name,resolution=resolution,date=timeindex[i],xmin=xmin,xmax=xmax,ymin=ymin,ymax=ymax)
    		names(imgs)<-timeindex[i]
   		}else{
-   		img<-getemisdata(name=name,resolution=resolution,date=timeindex[i],xmin=xmin,xmax=xmax,ymin=ymin,ymax=ymax)
+   		img<-getgmisdata(name=name,resolution=resolution,date=timeindex[i],xmin=xmin,xmax=xmax,ymin=ymin,ymax=ymax)
    		names(img)<-timeindex[i]
    		imgs<-stack(imgs,img)
   		}	

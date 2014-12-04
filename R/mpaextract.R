@@ -1,4 +1,4 @@
-#' This function downloads a time series of a variable from EMIS for a period of time month for a given MPA
+#' This function downloads a time series of a variable from EMIS or GMIS for a period of time month for a given MPA
 #' using the wcs-t service. The data are extracted with a buffer of about 10 km around the MPA.
 #'
 #' @param name A character vector of the shortname of the variable
@@ -10,12 +10,17 @@
 #' @export
 #' @return A rasterstack object of the variable for the given period on the MPA
 #' @keywords EMIS
+#' @keywords GMIS
 #' @keywords wcs-t
 #' @examples
 #'   \dontrun{
-#'      #extraction of the MODIS sea surface temperature at 2 km in 2009 and 2012 on the Pantelleria mpa (Italy)
+#'      #extraction of the MODIS sea surface temperature at 2 km from EMIS in 2009 and 2012 on the Pantelleria mpa (Italy)
 #'      img<-mpaextract("EMIS_T_SST","2km","2009-01","2012-12",555540558)
 #'      plot(img)
+#'	 #extraction of the MODIS chlorophyll a concentration at 4km from GMIS for 2008 and 2010 in the vicinity of the Bird Island marine protected area (South Africa)
+#'      img<-mpaextract("GMIS_A_CHLA","4km","2008-01","2010-12",306180)
+#'      plot(img)
+
 #'   } 
 #'
 mpaextract<-function(name="EMIS_A_CHLA",resolution="4km",startdate="2005-09",enddate="2005-10",wdpaid=555540558){
@@ -38,7 +43,14 @@ mpaextract<-function(name="EMIS_A_CHLA",resolution="4km",startdate="2005-09",end
         ymin<-extent(mpa)@ymin-.1
         ymax<-extent(mpa)@ymax+.1
         #get the requested data
-        imgs<-getemisdataseries(name=name,resolution=resolution,startdate=startdate,enddate=enddate,xmin,xmax,ymin,ymax)
+  	#check if EMIS or GMIS data is asked
+ 	imgs<-NA
+ 	if(substr(name,1,4)=="EMIS"){
+        	imgs<-getemisdataseries(name=name,resolution=resolution,startdate=startdate,enddate=enddate,xmin,xmax,ymin,ymax)
+        }
+ 	if(substr(name,1,4)=="GMIS"){
+        	imgs<-getgmisdataseries(name=name,resolution=resolution,startdate=startdate,enddate=enddate,xmin,xmax,ymin,ymax)
+	}
         return(imgs)
  }
 }

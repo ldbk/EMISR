@@ -1,8 +1,8 @@
-#' This function downloads a variable from EMIS for a month on a spatial area
+#' This function downloads a variable from GMIS for a month on a spatial area
 #' using the wcs-t service
 #'
 #' @param name A character vector of the shortname of the variable
-#' @param resolution A character vector giving the spatial resolution of the data: "4km" or "2km"
+#' @param resolution A character vector giving the spatial resolution of the data: "4km" or "9km"
 #' @param date A character vector of the month ("YYYY-MM")
 #' @param xmin A numeric vector of the lower longitude of the spatial area
 #' @param xmax A numeric vector of the max longitude of the spatial area
@@ -11,32 +11,32 @@
 #' 
 #' @export
 #' @return A rasterlayer object of the map of the variable for the given month 
-#' @keywords EMIS
+#' @keywords GMIS
 #' @keywords wcs-t
 #' @examples
 #'   \dontrun{
-#'	#extraction of the MODIS chlorophyll a concentration for Septembre 2009 on the gulf of Syrte (Lybia)
-#' 	img<-getemisdata("EMIS_A_CHLA","4km","2005-09",15,20.5,30,32.5)
+#'	#extraction of the MODIS chlorophyll a concentration for Septembre 2009 in the vicinity of the Bird Island area (South Africa)
+#'	img<-getgmisdata("GMIS_A_CHLA","4km","2005-09",xmin=26.1,xmax=26.5,ymin=-34,ymax=-33.5)
 #'	plot(img)
 #'   } 
 #'
-getemisdata<-function(name="EMIS_A_CHLA",resolution="4km",date="2005-09",xmin=15,xmax=20.5,ymin=30,ymax=32.5){
+getgmisdata<-function(name="GMIS_A_CHLA",resolution="4km",date="2005-09",xmin=15,xmax=20.5,ymin=30,ymax=32.5){
   checkparameter<-data.frame(name=FALSE,resolution=FALSE,date=FALSE,bbox=FALSE)
   #check the spatial resolution
-  if(resolution%in%c("2km","4km")){
+  if(resolution%in%c("4km","9km")){
 	checkparameter$resolution<-TRUE
-   	if(resolution=="4km"){data_emis<-data_emis_4km}
-   	if(resolution=="2km"){data_emis<-data_emis_2km}
+   	if(resolution=="4km"){data_gmis<-data_gmis_4km}
+   	if(resolution=="9km"){data_gmis<-data_gmis_9km}
    	#check variable name
-   	idvar<-grep(name,data_emis$shortname)
+   	idvar<-grep(name,data_gmis$shortname)
    	if(length(idvar)==0){
     		checkparameter$name<-FALSE
-    		print("Variable name do not exist on EMIS")
+    		print("Variable name do not exist on GMIS")
         }else{
     		checkparameter$name<-TRUE
         }
   }else{
-   	print("Spatial resolution should be 2km or 4km")
+   	print("Spatial resolution should be 4km or 9km")
   }
 
   #check time format
@@ -78,38 +78,38 @@ getemisdata<-function(name="EMIS_A_CHLA",resolution="4km",date="2005-09",xmin=15
   }
   
   if(apply(checkparameter,1,sum)==4){
-     #check date on EMIS time range
-     mindate<-strptime(paste(data_emis$startdate[idvar],"15",sep="-"),"%Y-%m-%d")
-     maxdate<-strptime(paste(data_emis$enddate[idvar],"15",sep="-"),"%Y-%m-%d")
+     #check date on GMIS time range
+     mindate<-strptime(paste(data_gmis$startdate[idvar],"15",sep="-"),"%Y-%m-%d")
+     maxdate<-strptime(paste(data_gmis$enddate[idvar],"15",sep="-"),"%Y-%m-%d")
      askeddate<-strptime(paste(date,"15",sep="-"),"%Y-%m-%d")
      if((mindate<=askeddate)&(askeddate<=maxdate)){
      	checkparameter$date<-TRUE
 	}else{
      	checkparameter$date<-FALSE
-     	print(paste(name,"is not available on EMIS for the",date))
+     	print(paste(name,"is not available on GMIS for the",date))
      }
      #check the bounding box
-     bboxemis<-unlist(strsplit(data_emis$bbox[idvar]," "))
-     xminemis<-as.numeric(bboxemis[1])
-     xmaxemis<-as.numeric(bboxemis[3])
-     yminemis<-as.numeric(bboxemis[2])
-     ymaxemis<-as.numeric(bboxemis[4])
-     n1<-xminemis<=xmin
-     n2<-xmax<=xmaxemis
-     n3<-yminemis<=ymin
-     n4<-ymax<=ymaxemis
+     bboxgmis<-unlist(strsplit(data_gmis$bbox[idvar]," "))
+     xmingmis<-as.numeric(bboxgmis[1])
+     xmaxgmis<-as.numeric(bboxgmis[3])
+     ymingmis<-as.numeric(bboxgmis[2])
+     ymaxgmis<-as.numeric(bboxgmis[4])
+     n1<-xmingmis<=xmin
+     n2<-xmax<=xmaxgmis
+     n3<-ymingmis<=ymin
+     n4<-ymax<=ymaxgmis
      if(n1&n2&n3&n4){
      	checkparameter$bbox<-TRUE
      }else{
      	checkparameter$bbox<-FALSE
-     	print(paste("The selected area is not strickly inside the spatial extent of", name,"in emis"))
+     	print(paste("The selected area is not strickly inside the spatial extent of", name,"in GMIS"))
      }
   }
 
   if(apply(checkparameter,1,sum)==4){
   	#define WCS connection"
         bbox<-paste(xmin,ymin,xmax,ymax,sep=",")
-  	con<-paste("http://emis.jrc.ec.europa.eu/webservices/",resolution,"/wcs-t?TIME=",date,"&service=wcs&version=1.0.0&request=getcoverage&coverage=",name,"&crs=EPSG:4326&BBOX=",bbox,"&format=image/tiff&interpolation=nearest",sep="")
+  	con<-paste("http://gmis.jrc.ec.europa.eu/webservices/",resolution,"/wcs-t?TIME=",date,"&service=wcs&version=1.0.0&request=getcoverage&coverage=",name,"&crs=EPSG:4326&BBOX=",bbox,"&format=image/tiff&interpolation=nearest",sep="")
   	#download the image file"
   	nomfich<-paste(name,date,"img.tiff",sep="_")
   	download(con,nomfich,quiet=TRUE,mode="wb")
@@ -118,7 +118,7 @@ getemisdata<-function(name="EMIS_A_CHLA",resolution="4km",date="2005-09",xmin=15
   	remove(nomfich)
   	img[img==0]<-NA
   	#log inverse backtransform if chl or k490 data
-  	if(length(grep("log",data_emis$unit[idvar],ignore.case=TRUE))>0){
+  	if(length(grep("log",data_gmis$unit[idvar],ignore.case=TRUE))>0){
    		img<-10^img
   	}
         names(img)<-paste(name,date)

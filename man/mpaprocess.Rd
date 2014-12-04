@@ -44,8 +44,20 @@ Vantrepotte, V. & Melin, F. Temporal variability of 10-year global SeaWiFS time-
 }
 \examples{
 \dontrun{
-     #analysis of the MODIS sea surface temperature at 2 km 2005 and 2006 on the Pantelleira mpa (Italy)
+     #analysis of the MODIS sea surface temperature at 2 km 2005 and 2006 on the Pantelleria mpa (Italy)
 	pltstat<-mpaprocess("EMIS_T_SST","2km","2005-01","2007-12",555540558)
+	#map of the whole series
+	pltstat[[1]]$pltall
+	#map of the average SST
+	pltstat[[1]]$pltmean
+	#map of the climatology
+	pltstat[[1]]$pltclim
+	#some statistics
+	pltstat[[2]]$stat
+	#time series decomposition of the parameters averaged on the MPA area
+	pltstat[[2]]$pltts
+	#extraction of the MODIS sea surface temperature at 4 km from GMIS for 2005-2007 in the the Bird Island area marine protected area (South Africa)
+	pltstat<-mpaprocess("GMIS_T_SST","4km","2005-01","2007-12",306180)
 	#map of the whole series
 	pltstat[[1]]$pltall
 	#map of the average SST

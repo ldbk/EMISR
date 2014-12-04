@@ -35,5 +35,6 @@ This function draw figures based on a series of map of a EMIS/GMIS parameter for
 	plt[[4]]
 }
 \keyword{EMIS}
+\keyword{GMIS}
 \keyword{wcs-t}
 

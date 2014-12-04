@@ -47,5 +47,6 @@ Vantrepotte, V. & Melin, F. Temporal variability of 10-year global SeaWiFS time-
 	stat[[2]]
 }
 \keyword{EMIS}
+\keyword{GMIS}
 \keyword{wcs-t}
 

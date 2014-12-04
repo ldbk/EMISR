@@ -9,6 +9,7 @@ Description: A package to extract and to analyse the data of the Environmental
     the Institute for Environment and Sustainability (IES).
 Depends:
     R (>= 3.0.2),
+    downloader,
     XML,
     RCurl,
     rgdal,
@@ -23,3 +24,6 @@ Depends:
 License: MIT +
 LazyData: true
 Date: 2014-12-02
+Suggests:
+    knitr
+VignetteBuilder: knitr
