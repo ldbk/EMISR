@@ -112,10 +112,10 @@ getemisdata<-function(name="EMIS_A_CHLA",resolution="4km",date="2005-09",xmin=15
   	con<-paste("http://emis.jrc.ec.europa.eu/webservices/",resolution,"/wcs-t?TIME=",date,"&service=wcs&version=1.0.0&request=getcoverage&coverage=",name,"&crs=EPSG:4326&BBOX=",bbox,"&format=image/tiff&interpolation=nearest",sep="")
   	#download the image file"
   	nomfich<-paste(name,date,"img.tiff",sep="_")
+        nomfich<-tempfile(nomfich)
   	download(con,nomfich,quiet=TRUE,mode="wb")
   	#return the corresponding raster"
   	img<-raster(nomfich)
-  	remove(nomfich)
   	img[img==0]<-NA
   	#log inverse backtransform if chl or k490 data
   	if(length(grep("log",data_emis$unit[idvar],ignore.case=TRUE))>0){

@@ -70,7 +70,7 @@ read_gmis_wcst_data<-function(resolution="4km",gmis_wcst_url=paste("http://gmis.
 #'
 #' @format A data frame with 30 rows and 8 variables
 #' @source \url{http://gmis.jrc.ec.europa.eu/webservices/4km/wcs-t}
-#' @name data_emis_4km
+#' @name data_gmis_4km
 NULL
 
 
