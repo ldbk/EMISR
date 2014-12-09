@@ -2,10 +2,10 @@ EMISR
 =====
 
 EMISR is an R package to access to the data of the Environmental
-Marine Information System (EMIS <http://emis.jrc.ec.europa.eu/>) and the Global Marine Information System
-(GMIS <http://gmis.jrc.ec.europa.eu/>).
-The world database of the Marine Protected Areas (MPA <http://en.wikipedia.org/wiki/Marine_protected_area>) and the Exclusice Economic Zone (EEZ
-<http://en.wikipedia.org/wiki/Exclusive_economic_zone>) boundaries are provided in rdata
+Marine Information System ([EMIS](<http://emis.jrc.ec.europa.eu/>)) and the Global Marine Information System
+([GMIS](<http://gmis.jrc.ec.europa.eu/>)).
+The world database of the Marine Protected Areas ([MPA](<http://en.wikipedia.org/wiki/Marine_protected_area>)) and the
+Exclusice Economic Zone ([EEZ](<http://en.wikipedia.org/wiki/Exclusive_economic_zone>)) boundaries are provided in rdata
 format with it. 
 
 #Installation
