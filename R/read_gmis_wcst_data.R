@@ -41,8 +41,8 @@ read_gmis_wcst_data<-function(resolution="4km",gmis_wcst_url=paste("http://gmis.
    tps<-unlist(r[[3]][[i]][[4]])
    tps<-as.vector(tps[names(tps)=="children.timePosition.children.text.value"])
    tps<-strptime(paste(tps,"15",sep="-"),"%Y-%m-%d")
-   carac$startdate<- format(min(tps),"%Y-%m")
-   carac$enddate<- format(max(tps),"%Y-%m")
+   carac$startdate[i]<- format(min(tps,na.rm=T),"%Y-%m")
+   carac$enddate[i]<- format(max(tps,na.rm=T),"%Y-%m")
   }
   }else{
    print("no internet connection or GMIS server down")

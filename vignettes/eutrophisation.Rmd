@@ -45,7 +45,7 @@ Kingdom")
 
 ##Chlorophyll a
 ```{r,eval=FALSE}
- europe_chl<-getemisdataseries("EMIS_A_CHLA","2km","2012-01","2012-12",-16.1,35.2,32.8,66)
+ europe_chl<-getemisdataseries("EMIS_A_CHLA","2km","2009-01","2009-12",-16.1,35.2,32.8,66)
 ```
 
 
