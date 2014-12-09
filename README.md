@@ -1,10 +1,18 @@
 EMISR
 =====
 
-EMISR is an R package.
+EMISR is an R package to access to the data of the Environmental
+Marine Information System (EMIS <http://emis.jrc.ec.europa.eu/>) and the Global Marine Information System
+(GMIS <http://gmis.jrc.ec.europa.eu/>).
+The world database of the Marine Protected Areas (MPA <http://en.wikipedia.org/wiki/Marine_protected_area>) and the Exclusice Economic Zone (EEZ
+<http://en.wikipedia.org/wiki/Exclusive_economic_zone>) boundaries are provided in rdata
+format with it. 
 
 #Installation
 
+The package size is about 230 Mo, the download can take several minutes according to your internet connection.
+
+In a R console:
 
 `install.packages("devtools")`
 
@@ -22,7 +30,6 @@ the Institute for Environment and Sustainability (IES).
 
 The installation of this package can be long (the package size is about 230 Mo) 
 because it includes the world MPA database and the world EEZ database in rdata format.
-To install it, open a R console :
 
 The shapefile of the marine protected area (MPA) was downloaded from
 <http://www.protectedplanet.net> the 03/12/2014.
